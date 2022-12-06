@@ -4,6 +4,7 @@
 import logging
 import os
 import torch
+import trimesh
 import utils.data_loaders
 import utils.helpers
 import utils.io
@@ -84,15 +85,27 @@ def inference_net(cfg):
                 os.makedirs(output_folder_pcd1)
                 os.makedirs(output_folder_pcd2)
                 os.makedirs(output_folder_pcd3)
+            
+            output_file_path = os.path.join(output_folder, 'pcd1', '%s.ply' % model_id)
+            mesh1 = trimesh.points.PointCloud(pcd1.squeeze().cpu().numpy())
+            mesh1.export(output_file_path)
 
-            output_file_path = os.path.join(output_folder, 'pcd1', '%s.h5' % model_id)
-            utils.io.IO.put(output_file_path, pcd1.squeeze().cpu().numpy())
+            output_file_path = os.path.join(output_folder, 'pcd2', '%s.ply' % model_id)
+            mesh2 = trimesh.points.PointCloud(pcd2.squeeze().cpu().numpy())
+            mesh2.export(output_file_path)
 
-            output_file_path = os.path.join(output_folder, 'pcd2', '%s.h5' % model_id)
-            utils.io.IO.put(output_file_path, pcd2.squeeze().cpu().numpy())
+            output_file_path = os.path.join(output_folder, 'pcd3', '%s.ply' % model_id)
+            mesh3 = trimesh.points.PointCloud(pcd3.squeeze().cpu().numpy())
+            mesh3.export(output_file_path)
 
-            output_file_path = os.path.join(output_folder, 'pcd3', '%s.h5' % model_id)
-            utils.io.IO.put(output_file_path, pcd3.squeeze().cpu().numpy())
+            # output_file_path = os.path.join(output_folder, 'pcd1', '%s.h5' % model_id)
+            # utils.io.IO.put(output_file_path, pcd1.squeeze().cpu().numpy())
+
+            # output_file_path = os.path.join(output_folder, 'pcd2', '%s.h5' % model_id)
+            # utils.io.IO.put(output_file_path, pcd2.squeeze().cpu().numpy())
+
+            # output_file_path = os.path.join(output_folder, 'pcd3', '%s.h5' % model_id)
+            # utils.io.IO.put(output_file_path, pcd3.squeeze().cpu().numpy())
 
             t_obj.set_description('Test[%d/%d] Taxonomy = %s Sample = %s File = %s' %
                          (model_idx + 1, n_samples, taxonomy_id, model_id, output_file_path))
